@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aging Simulation Storyboard</title>
+    <!-- 1. Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 2. Use Inter font */
+        body {
+            font-family: "Inter", sans-serif;
+        }
+        
+        /* 3. Custom styles for a simple, clean modal background */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 4. Custom class for images to add a subtle border */
+        .character-img {
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .character-img.active {
+            border-color: #3B82F6; /* blue-500 */
+            transform: scale(1.05);
+        }
+
+        /* 5. Styles for the character selection cards */
+        .character-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* 6. REMOVED fixed height for #website-container */
+        
+        /* 7. REMOVED the .instructional-panel CSS rule. */
+        /* Flexbox will now handle the height automatically */
+        
+    </style>
+</head>
+<!-- 8. NEW: Body is now the container that centers the "window" -->
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 md:p-8">
+
+    <!-- 9. REMOVED the outer wrapper div -->
+        
+    <!-- 10. NEW: This is the main "Website" content, now a centered "window" -->
+    <div id="website-container" class="w-full max-w-7xl bg-white shadow-2xl flex flex-col rounded-lg overflow-hidden" style="height: 85vh;">
+
+        <!-- ====================================================== -->
+        <!-- Screen 1: Character Selection Screen (UPGRADED)        -->
+        <!-- ====================================================== -->
+        <div id="screen-1-splash" class="flex-1 flex flex-col h-full">
+            <!-- This inner div centers the content -->
+            <div class="flex-1 p-8 md:p-12 flex flex-col items-center justify-center text-center w-full max-w-3xl mx-auto overflow-y-auto">
+                
+                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+                    The Lived Experience
+                </h1>
+                <p class="text-lg text-gray-700 mb-8">
+                    Choose a perspective to begin.
+                </p>
+
+                <!-- 11. Character Selection Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    <!-- LAURA -->
+                    <div onclick="startSimulation('laura')" class="character-card bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+                        <img src="https://placehold.co/200x200/bfdbfe/1e3a8a?text=Laura" alt="Laura" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
+                        <h3 class="text-2xl font-semibold text-blue-800 mb-2">Laura</h3>
+                        <p class="text-gray-600">"I just... your name is on the tip of my tongue, dear..."</p>
+                    </div>
+                    
+                    <!-- ANA -->
+                    <div onclick="startSimulation('ana')" class="character-card bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+                        <img src="https://placehold.co/200x200/fecaca/7f1d1d?text=Ana" alt="Ana" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
+                        <h3 class="text-2xl font-semibold text-red-800 mb-2">Ana</h3>
+                        <p class="text-gray-600">"Oh, don't worry about me. You all go ahead, I'll be fine."</p>
+                    </div>
+
+                    <!-- MICHEL -->
+                    <div onclick="startSimulation('michel')" class="character-card bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
+                        <img src="https://placehold.co/200x200/bbf7d0/14532d?text=Michel" alt="Michel" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
+                        <h3 class="text-2xl font-semibold text-green-800 mb-2">Michel</h3>
+                        <p class="text-gray-600">"It's nothing. Just a lot of noise in here, that's all."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 12. Navigation for the splash screen -->
+            <div class="bg-gray-50 p-4 flex items-center justify-center gap-4 border-t border-gray-200">
+                <button onclick="showModal('modal-objectives')" class="bg-white border border-gray-300 text-gray-700 py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+                    Learning Objectives
+                </button>
+                <button onclick="showModal('modal-instructions')" class="bg-white border border-gray-300 text-gray-700 py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+                    Instructions & Help
+                </button>
+            </div>
+        </div>
+
+        <!-- ====================================================== -->
+        <!-- Screen 2: The Simulation Scene (NEW SPLIT LAYOUT)      -->
+        <!-- ====================================================== -->
+        <div id="screen-2-simulation" class="flex-1 flex flex-col h-full relative hidden">
+            <!-- 13. HEADER -->
+            <div class="bg-gray-800 text-white p-4 flex items-center justify-between">
+                <button onclick="showScreen('screen-1-splash')" class="bg-gray-700 text-white py-1 px-3 rounded-lg hover:bg-gray-600 transition-all text-sm">
+                    &larr; Exit
+                </button>
+                <h2 id="scenario-title" class="text-xl font-semibold"></h2>
+                <div class="w-16"></div> <!-- Spacer -->
+            </div>
+            
+            <!-- 14. Split-Screen Container -->
+            <!-- The `flex-1` here makes it fill the remaining height -->
+            <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+                
+                <!-- 15. LEFT COLUMN: VISUAL STAGE -->
+                <!-- Added `h-64 md:h-full` so it has a height on mobile, but fills on desktop -->
+                <div class="w-full md:w-3/5 bg-gray-700 relative overflow-hidden h-64 md:h-full">
+                    <img id="stage-bg" src="" class="absolute inset-0 w-full h-full object-cover z-0" alt="Scenario Background">
+                    
+                    <!-- Character Visuals Container -->
+                    <div id="character-visuals" class="hidden z-10 w-full h-full absolute flex justify-between items-end px-12 pb-8">
+                            <img id="char-1" src="" alt="Character 1" class="character-img rounded-md max-h-64 md:max-h-80 lg:max-h-96">
+                            <img id="char-2" src="" alt="Character 2" class="character-img rounded-md max-h-64 md:max-h-80 lg:max-h-96">
+                    </div>
+                </div>
+
+                <!-- 16. RIGHT COLUMN: INSTRUCTIONAL PANEL -->
+                <!-- `flex-1` and `overflow-hidden` are key here -->
+                <div class="w-full md:w-2/5 bg-white flex flex-col flex-1 overflow-hidden">
+                    <!-- This inner div handles the content and scrolling -->
+                    <div class="flex-1 p-6 md:p-8 overflow-y-auto">
+                        <!-- Part 0: Character Bio (Dynamic) -->
+                        <div id="scenario-bio" class="scenario-part hidden">
+                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Character Bio: <span id="bio-name"></span></h3>
+                            <div class="flex flex-col gap-6">
+                                <img id="bio-img" src="" alt="Bio Photo" class="rounded-lg shadow-md w-full h-48 object-cover">
+                                <div class="flex-1">
+                                    <p id="bio-intro" class="text-lg mb-4"></p>
+                                    <ul id="bio-bullets" class="list-disc list-inside space-y-2"></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Part 1: Introduction (Dynamic) -->
+                        <div id="scenario-intro" class="scenario-part hidden">
+                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Introduction: <span id="intro-title"></span></h3>
+                            <p id="intro-text" class="text-lg text-gray-700"></p>
+                        </div>
+
+                        <!-- Part 2: Dialogue (Dynamic) -->
+                        <div id="scenario-dialogue" class="scenario-part hidden">
+                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Dialogue</h3>
+                            <!-- This is where dialogue lines will appear -->
+                            <div id="dialogue-display" class="bg-gray-50 rounded-lg p-4 min-h-[150px]">
+                                <div id="speaker-name" class="font-bold text-lg mb-2 text-blue-800"></div>
+                                <p id="dialogue-text" class="text-xl italic text-gray-700"></p>
+                            </div>
+                        </div>
+                        
+                        <!-- Part 3: Assessment (Dynamic) -->
+                        <div id="scenario-assessment" class="scenario-part hidden">
+                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Assessment</h3>
+                                <p id="assessment-question" class="text-lg mb-6"></p>
+                                <div id="assessment-feedback" class="text-red-600 mb-4 hidden italic font-medium"></div>
+                                <div id="assessment-options" class="flex flex-col gap-4">
+                                <!-- Options will be dynamically inserted here -->
+                                </div>
+                        </div>
+                        
+                        <!-- Part 4: Knowledge Blurb (Dynamic) -->
+                        <div id="scenario-knowledge-blurb" class="scenario-part hidden">
+                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Knowledge Blurb</h3>
+                                <p id="knowledge-feedback" class="text-lg mb-4 font-semibold"></p>
+                                <p id="knowledge-text" class="text-md md:text-lg"></p>
+                                <p id="knowledge-source" class="text-sm text-gray-500 mt-4"></p>
+                        </div>
+        
+                        <!-- Part 5: Reflection (Dynamic) -->
+                        <div id="scenario-reflection" class="scenario-part hidden">
+                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Reflection</h3>
+                                <p id="reflection-text" class="text-lg"></p>
+                        </div>
+        
+                        <!-- Part 6: End (Overlay) -->
+                        <div id="scenario-end" class="scenario-part hidden">
+                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">End of Scenario</h3>
+                                <p class="text-lg">You have completed this scenario. Click "Exit" in the header to return to the main menu.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 17. Navigation for the scenario (NOW INSIDE RIGHT COLUMN) -->
+                    <div class="bg-gray-50 p-4 flex items-center justify-center border-t border-gray-200">
+                        <button id="continue-button" class="bg-blue-600 text-white py-2 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition-all font-semibold" disabled>
+                            Continue
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> <!-- End #website-container -->
+
+    <!-- ====================================================== -->
+    <!-- MODALS (Pop-ups)                                       -->
+    <!-- These are now correctly placed outside the container   -->
+    <!-- but inside the body.                                   -->
+    <!-- ====================================================== -->
+
+    <!-- 18. Learning Objectives Modal -->
+    <div id="modal-objectives" class="fixed inset-0 z-50 modal-backdrop items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-lg rounded-lg shadow-xl overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Learning Objectives</h3>
+                <button onclick="closeModal('modal-objectives')" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+            </div>
+            <div class="p-6">
+                <ul class="list-disc list-inside space-y-2 text-gray-700">
+                    <li>Identify and challenge common myths and misconceptions about the aging process.</li>
+                    <li>Analyze scenarios from the perspective of an elderly individual.</li>
+                    <li>Recognize the social and emotional impacts of cognitive, sensory, and social challenges related to aging.</li>
+                    <li>Reflect on how to apply empathy in real-world interactions.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 19. Instructions & Help Modal -->
+    <div id="modal-instructions" class="fixed inset-0 z-50 modal-backdrop items-center justify-center p-4 hidden">
+            <div class="bg-white w-full max-w-lg rounded-lg shadow-xl overflow-hidden">
+            <div class="flex items-center justify-between p-4 border-b">
+                <h3 class="text-xl font-semibold text-gray-800">Instructions & Help</h3>
+                <button onclick="closeModal('modal-instructions')" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+            </div>
+            <div class="p-6 text-gray-700 space-y-4">
+                <p>Welcome to the simulation. Your goal is to navigate the scenarios and consider the perspective of the person you are embodying.</p>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Select a character to begin their story.</li>
+                    <li>Read the bio and introduction to understand their context.</li>
+                    <li>Click "Continue" to advance the dialogue.</li>
+                    <li>When prompted, make a choice or complete an assessment.</li>
+                    <li>After each scenario, take a moment to complete the reflection.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 20. REMOVED the stray closing div -->
+
+    <!-- ====================================================== -->
+    <!-- JAVASCRIPT LOGIC (Unchanged)                           -->
+    <!-- ====================================================== -->
+    <script>
+        // ======================================================
+        // 16. SCENARIO DATA (The "Academic" Content)
+        // ======================================================
+        const scenarioData = {
+            'laura': {
+                title: "Laura's Day: The Pharmacy",
+                bio: {
+                    name: "Laura (87)",
+                    img: "https://placehold.co/400x300/bfdbfe/1e3a8a?text=Laura's+Bio+Photo",
+                    intro: "You are about to step into the shoes of Laura (87).",
+                    bullets: [
+                        "Widowed for 10 years.",
+                        "Lives alone in the house she's owned for 50 years.",
+                        "She values her independence and her weekly lunch with 'the girls.'",
+                        "Lately, she's been frustrated by small memory lapses."
+                    ]
+                },
+                intro: {
+                    title: "Scene One: A Simple Errand",
+                    text: "You are Laura. You've just had a lovely lunch with friends and stop by the pharmacy on your way home. You're feeling good, but also a little tired from all the talking."
+                },
+                scene: {
+                    bg: "https://placehold.co/1200x800/bbf7d0/f0fdf4?text=Pharmacy+Background",
+                    char1: { id: "char-1", src: "https://placehold.co/400x600/bfdbfe/1e3a8a?text=Laura+(87)" },
+                    char2: { id: "char-2", src: "https://placehold.co/400x600/fed7aa/7c2d12?text=Pharmacist" }
+                },
+                dialogue: [
+                    { speaker: "Pharmacist", text: "Hello, how are you doing today?" },
+                    { speaker: "Laura", text: "(Squinting slightly) ...Oh, hello dear. I'm doing well. Just had lunch with the girls." },
+                    { speaker: "Pharmacist", text: "That sounds nice! How may I help you today, Mrs. ...?" },
+                    { speaker: "Laura", text: "(A moment of panic, forcing a smile) Oh, you know me. It's Laura. Laura Peterson. I just... your name is on the tip of my tongue, dear..." },
+                    { speaker: "Pharmacist", text: "(Smiling kindly) It's Mark. No problem at all! What can I get for you?" },
+                    { speaker: "Laura", text: "(Visibly relieved, but overly bright) Oh, Mark, of course! I'm so silly. I just need to pick up my prescriptions, thank you." },
+                    { speaker: "Narrator", text: "Laura feels a flush of embarrassment, angry at herself for the simple mistake. She hopes Mark didn't notice." }
+                ],
+                assessment: {
+                    question: "Based on that interaction, what was Laura most likely feeling?",
+                    options: [
+                        { text: "Genuinely Happy. She had a great lunch and wasn't bothered at all.", correct: false },
+                        { text: "Flustered and a little embarrassed, but trying to cover it by being extra cheerful.", correct: true },
+                        { text: "Annoyed at the Pharmacist for being so formal.", correct: false }
+                    ],
+                    feedback: "That's one possibility, but consider the subtext. Try again.",
+                    correctFeedback: "<b>That's right!</b> Laura was likely feeling flustered. This is a common experience.",
+                    knowledge: "Social interactions can become a source of anxiety when combined with minor, normal age-related memory lapses. Often, an older adult will overcompensate with 'cheerfulness' or 'friendliness' to hide their frustration or embarrassment.",
+                    source: "(Concept: Age-Related Cognitive Lapses)"
+                },
+                reflection: "Imagine you experience Laura's situation. How might this small, daily frustration affect your desire to go out and interact with others?"
+            },
+            'ana': {
+                title: "Ana's Weekly Call",
+                bio: {
+                    name: "Ana (76)",
+                    img: "https://placehold.co/400x300/fecaca/7f1d1d?text=Ana's+Bio+Photo",
+                    intro: "You are about to step into the shoes of Ana (76).",
+                    bullets: [
+                        "Lives in a retirement community.",
+                        "Her children and grandchildren live far away.",
+                        "She loves her family and treasures their weekly video calls.",
+                        "Her son just sent her a new tablet, but she finds it 'fussy'."
+                    ]
+                },
+                intro: {
+                    title: "Scene One: The Video Call",
+                    text: "You are Ana. It's Sunday at 2:00 PM, time for the weekly family video call. Your son, Miguel, is starting the call. You grab your new tablet, open the 'Zoom' app like he showed you, and wait."
+                },
+                scene: {
+                    bg: "https://placehold.co/1200x800/e0e7ff/3730a3?text=Ana's+Living+Room",
+                    char1: { id: "char-1", src: "https://placehold.co/400x600/fecaca/7f1d1d?text=Ana+(76)" },
+                    char2: { id: "char-2", src: "https://placehold.co/400x600/c7d2fe/312e81?text=Laptop+Screen" }
+                },
+                dialogue: [
+                    { speaker: "Narrator", text: "You see the 'Join Meeting' button and tap it. A box pops up: 'Allow Zoom to access your microphone and camera?'" },
+                    { speaker: "Ana", text: "(To herself) Oh dear. I don't know... I'll just hit 'Cancel'." },
+                    { speaker: "Narrator", text: "You join the call, but your screen is black and they can't hear you. You can hear your son and grandkids laughing." },
+                    { speaker: "Miguel (on Zoom)", text: "Mom? Are you there? We can't see you. Mom? ... Ugh, I bet the settings are wrong again." },
+                    { speaker: "Ana", text: "(Panicked, tapping the screen) I'm here! I'm here! Can you hear me? Oh, this silly thing!" },
+                    { speaker: "Miguel (on Zoom)", text: "Mom, you have to allow the camera! I showed you this... just... ugh. Can you try re-joining?" },
+                    { speaker: "Ana", text: "(Voice trembling) Oh, it's no problem, mijo. You all talk. It's fine. Don't worry about me. I'll just listen." },
+                    { speaker: "Narrator", text: "Ana mutes the call, feeling a sharp sting of frustration and loneliness. She feels incompetent and, worse, like a bother." }
+                ],
+                assessment: {
+                    question: "Why did Ana say 'Don't worry about me' and mute the call?",
+                    options: [
+                        { text: "She was truly fine with just listening and didn't mind that it wasn't working.", correct: false },
+                        { text: "She was angry at her son for being impatient and wanted to end the call.", correct: false },
+                        { text: "She felt embarrassed and didn't want to 'be a bother' by making them stop and help her.", correct: true }
+                    ],
+                    feedback: "That's a possible interpretation, but consider her feelings in that moment. Try again.",
+                    correctFeedback: "<b>That's right.</b> She likely felt embarrassed and didn't want to disrupt the call.",
+                    knowledge: "This is known as the 'Digital Divide.' It's not just about access to technology, but also the skills and confidence to use it. For many seniors, the fear of 'breaking something' or 'being a bother' is a major barrier, which can lead to profound social isolation, even when technology is meant to connect.",
+                    source: "(Concept: Digital Divide & Social Isolation)"
+                },
+                reflection: "Think about a time you felt left out of a conversation. How does Ana's experience compare? How could her son have handled that better?"
+            },
+            'michel': {
+                title: "Michel's Birthday Dinner",
+                bio: {
+                    name: "Michel (82)",
+                    img: "https://placehold.co/400x300/bbf7d0/14532d?text=Michel's+Bio+Photo",
+                    intro: "You are about to step into the shoes of Michel (82).",
+                    bullets: [
+                        "Retired professor.",
+                        "Proud, intelligent, and used to leading conversations.",
+                        "He has moderate, age-related hearing loss (presbycusis).",
+                        "He refuses to get hearing aids, saying 'I'm not that old yet.'"
+                    ]
+                },
+                intro: {
+                    title: "Scene One: The Restaurant",
+                    text: "You are Michel. Your family is taking you to your favorite (but very loud) Italian restaurant for your 82nd birthday. You're at a big, round table with your children and grandchildren."
+                },
+                scene: {
+                    bg: "https://placehold.co/1200x800/fde68a/b45309?text=Loud+Restaurant",
+                    char1: { id: "char-1", src: "https://placehold.co/400x600/bbf7d0/14532d?text=Michel+(82)" },
+                    char2: { id: "char-2", src: "https://placehold.co/400x600/dbeafe/1e40af?text=Family" }
+                },
+                dialogue: [
+                    { speaker: "Narrator", text: "The restaurant is buzzing. Plates clatter. People are laughing. Your granddaughter, Sarah, is telling a story from college." },
+                    { speaker: "Sarah", text: "...so the professor looks at me and says, 'That's... (mumble mble)... creative!' And the whole class... (mumble)..." },
+                    { speaker: "Narrator", text: "You can't make out the words over the din. You lean in, smiling and nodding, pretending to follow." },
+                    { speaker: "Family", text: "(Everyone laughs loudly)" },
+                    { speaker: "Your Son", text: "(Leaning in) What'd you think of that, Dad? Pretty funny, right?" },
+                    { speaker: "Michel", text: "(Caught off guard) Oh, yes. Very. She's a smart girl." },
+                    { speaker: "Narrator", text: "Your son gives you a slightly confused look and turns back to the conversation. You feel a wave of irritation. You're straining so hard to listen, it's exhausting." },
+                    { speaker: "Sarah", text: "And then, Grandpa, I... (mumble mumble)... just like you used to!" },
+                    { speaker: "Michel", text: "(Smiling) That's nice, dear." },
+                    { speaker: "Narrator", text: "You slowly stop trying to follow. You retreat into your own thoughts, feeling isolated and, for the first time, old. You just nod and smile." }
+                ],
+                assessment: {
+                    question: "What is the primary reason Michel withdrew from the conversation?",
+                    options: [
+                        { text: "He was bored with his granddaughter's stories and wasn't interested.", correct: false },
+                        { text: "He was physically and mentally exhausted from the strain of trying to hear over the background noise.", correct: true },
+                        { text: "He was angry that his family didn't speak up and was punishing them by being silent.", correct: false }
+                    ],
+                    feedback: "While he might be frustrated, that's not the *primary* reason. Think about the physical effort involved. Try again.",
+                    correctFeedback: "<b>Exactly.</b> He was exhausted from the high cognitive load of trying to listen.",
+                    knowledge: "This is a key effect of age-related hearing loss (presbycusis). The challenge isn't just volume; it's *clarity*, especially with background noise. The constant strain is physically and mentally exhausting (high cognitive load). This often leads to social withdrawal, not out of 'grumpiness,' but out of fatigue and the fear of responding inappropriately.",
+                    source: "(Concept: Presbycusis & Cognitive Load)"
+                },
+                reflection: "Think about how you feel in a loud, chaotic environment. How does Michel's pride (not wanting hearing aids) make his situation even more difficult?"
+            }
+        };
+
+        // ======================================================
+        // 17. SIMULATION ENGINE
+        // ======================================================
+
+        // --- Global Variables ---
+        let currentScenario = null;
+        let dialogueLines = [];
+        let currentDialogueIndex = 0;
+        
+        let char1 = null;
+        let char2 = null;
+    
+        // --- Modal Functions ---
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('flex');
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            document.getElementById(modalId).classList.remove('flex');
+        }
+
+        // --- Screen Management ---
+        function showScreen(screenId) {
+            document.getElementById('screen-1-splash').classList.add('hidden');
+            document.getElementById('screen-2-simulation').classList.add('hidden');
+            
+            // Un-hide the requested screen
+            document.getElementById(screenId).classList.remove('hidden');
+            
+            // Special case for splash screen: ensure it's flex
+            if (screenId === 'screen-1-splash') {
+                 document.getElementById(screenId).classList.add('flex');
+            }
+
+            // NEW: Hide character visuals when exiting
+            if (screenId === 'screen-1-splash') {
+                document.getElementById('character-visuals').classList.add('hidden');
+                if(char1) char1.classList.remove('active');
+                if(char2) char2.classList.remove('active');
+            }
+        }
+
+        // --- Show/Hide Scenario Parts (IN RIGHT PANEL) ---
+        function showScenarioPart(partId) {
+            document.querySelectorAll('.scenario-part').forEach(part => {
+                part.classList.add('hidden');
+            });
+            if (partId) {
+                document.getElementById(partId).classList.remove('hidden');
+            }
+        }
+        
+        // --- Active Speaker Highlight ---
+        function setActiveSpeaker(speaker) {
+            if (!char1) char1 = document.getElementById('char-1');
+            if (!char2) char2 = document.getElementById('char-2');
+            
+            // Get the first name from the alt tag
+            const char1Name = char1.alt.split(' ')[0];
+            const char2Name = char2.alt.split(' ')[0];
+
+            if (speaker === char1Name) {
+                char1.classList.add('active');
+                char2.classList.remove('active');
+            } else if (speaker === char2Name) {
+                char1.classList.remove('active');
+                char2.classList.add('active');
+            } else {
+                // Narrator or system
+                char1.classList.remove('active');
+                char2.classList.remove('active');
+            }
+        }
+
+        // --- 18. MAIN: Start Simulation ---
+        function startSimulation(scenarioId) {
+            currentScenario = scenarioData[scenarioId];
+            
+            // 1. Setup UI
+            showScreen('screen-2-simulation');
+            document.getElementById('scenario-title').textContent = currentScenario.title;
+            document.getElementById('stage-bg').src = currentScenario.scene.bg;
+            
+            // Show character visuals panel
+            document.getElementById('character-visuals').classList.remove('hidden');
+            
+            char1 = document.getElementById('char-1');
+            char2 = document.getElementById('char-2');
+            char1.src = currentScenario.scene.char1.src;
+            char1.alt = currentScenario.bio.name; // e.g., "Laura (87)"
+            char2.src = currentScenario.scene.char2.src;
+            char2.alt = currentScenario.scene.char2.alt || "Other";
+
+            // 2. Load Bio
+            document.getElementById('bio-name').textContent = currentScenario.bio.name;
+            document.getElementById('bio-img').src = currentScenario.bio.img;
+            document.getElementById('bio-intro').textContent = currentScenario.bio.intro;
+            
+            const bulletsUl = document.getElementById('bio-bullets');
+            bulletsUl.innerHTML = ''; // Clear old bullets
+            currentScenario.bio.bullets.forEach(bullet => {
+                const li = document.createElement('li');
+                li.textContent = bullet;
+                bulletsUl.appendChild(li);
+            });
+            
+            showScenarioPart('scenario-bio');
+            
+            // 3. Setup Continue Button
+            const continueButton = document.getElementById('continue-button');
+            continueButton.textContent = 'Continue';
+            continueButton.disabled = false;
+            
+            // 4. Set flow: Bio -> Intro -> Dialogue
+            continueButton.onclick = () => {
+                // Load Intro
+                document.getElementById('intro-title').textContent = currentScenario.intro.title;
+                document.getElementById('intro-text').textContent = currentScenario.intro.text;
+                showScenarioPart('scenario-intro');
+                
+                // Set button for next step
+                continueButton.onclick = () => runDialogue();
+            };
+        }
+
+        // --- 19. Run Dialogue ---
+        function runDialogue() {
+            showScenarioPart('scenario-dialogue');
+            
+            dialogueLines = currentScenario.dialogue;
+            currentDialogueIndex = 0;
+            updateDialogueLine();
+            
+            const continueButton = document.getElementById('continue-button');
+            continueButton.onclick = () => advanceDialogue();
+            continueButton.disabled = false;
+        }
+        
+        // --- 20. Advance Dialogue ---
+        function advanceDialogue() {
+            currentDialogueIndex++;
+            if (currentDialogueIndex < dialogueLines.length) {
+                updateDialogueLine();
+            } else {
+                showAssessment();
+            }
+        }
+        
+        // --- 21. Update Dialogue UI Helper ---
+        function updateDialogueLine() {
+            const line = dialogueLines[currentDialogueIndex];
+            document.getElementById('dialogue-text').textContent = line.text;
+            document.getElementById('speaker-name').textContent = line.speaker;
+            setActiveSpeaker(line.speaker.split(' ')[0]); // Pass first name
+        }
+        
+        // --- 22. Show Assessment ---
+        function showAssessment() {
+            const assessment = currentScenario.assessment;
+            document.getElementById('assessment-question').textContent = assessment.question;
+            
+            const optionsDiv = document.getElementById('assessment-options');
+            optionsDiv.innerHTML = ''; // Clear old options
+            
+            assessment.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = "text-left bg-gray-100 text-gray-700 p-4 rounded-lg hover:bg-gray-200 transition-all text-md font-medium";
+                button.textContent = option.text;
+                button.onclick = () => checkAssessment(option.correct);
+                optionsDiv.appendChild(button);
+            });
+            
+            document.getElementById('assessment-feedback').classList.add('hidden');
+            document.getElementById('continue-button').disabled = true;
+            showScenarioPart('scenario-assessment');
+        }
+        
+        // --- 23. Check Assessment ---
+        function checkAssessment(isCorrect) {
+            const assessment = currentScenario.assessment;
+            const feedbackEl = document.getElementById('assessment-feedback');
+            
+            if (isCorrect) {
+                document.getElementById('knowledge-feedback').innerHTML = assessment.correctFeedback;
+                document.getElementById('knowledge-text').textContent = assessment.knowledge;
+                document.getElementById('knowledge-source').textContent = assessment.source;
+                
+                showScenarioPart('scenario-knowledge-blurb');
+                
+                const continueButton = document.getElementById('continue-button');
+                continueButton.disabled = false;
+                continueButton.onclick = () => showReflection();
+            } else {
+                feedbackEl.textContent = assessment.feedback;
+                feedbackEl.classList.remove('hidden');
+            }
+        }
+        
+        // --- 24. Show Reflection ---
+        function showReflection() {
+            document.getElementById('reflection-text').textContent = currentScenario.reflection;
+            showScenarioPart('scenario-reflection');
+            
+            const continueButton = document.getElementById('continue-button');
+            continueButton.disabled = false;
+            continueButton.onclick = () => showEndScreen();
+        }
+
+        // --- 25. Show End Screen ---
+        function showEndScreen() {
+            showScenarioPart('scenario-end');
+            document.getElementById('continue-button').disabled = true;
+        }
+
+    </script>
+</body>
+</html>
