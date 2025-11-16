@@ -4,33 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aging Simulation Storyboard</title>
-    <!-- 1. Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 
+      All CSS and SVGs are now 100% inline.
+      This file has zero external dependencies.
+    -->
     <style>
-        /* 2. Use Inter font */
+        /* 1. Base Styles & Font */
         body {
-            font-family: "Inter", sans-serif;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem; /* p-4 */
         }
-        
-        /* 3. Custom styles for a simple, clean modal background */
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-        
-        /* 4. Custom class for images to add a subtle border */
-        .character-img {
-            border: 4px solid white;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .character-img.active {
-            border-color: #3B82F6; /* blue-500 */
-            transform: scale(1.05);
+        @media (min-width: 768px) {
+            body {
+                padding: 2rem; /* md:p-8 */
+            }
         }
 
-        /* 5. Styles for the character selection cards */
+        /* 2. Main Window */
+        #website-container {
+            width: 100%;
+            max-width: 112rem; /* max-w-7xl */
+            background-color: #ffffff; /* bg-white */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+            display: flex;
+            flex-direction: column;
+            border-radius: 0.5rem; /* rounded-lg */
+            overflow: hidden;
+            height: 85vh;
+        }
+
+        /* 3. Screen 1: Splash Screen */
+        #screen-1-splash {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        #screen-1-splash .content {
+            flex-grow: 1;
+            padding: 2rem; /* p-8 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+            max-width: 56rem; /* max-w-3xl */
+            margin-left: auto;
+            margin-right: auto;
+            overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+            #screen-1-splash .content {
+                padding: 3rem; /* md:p-12 */
+            }
+        }
+        #screen-1-splash h1 {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700;
+            color: #1f2937; /* text-gray-800 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        @media (min-width: 768px) {
+            #screen-1-splash h1 {
+                font-size: 2.25rem; /* md:text-4xl */
+            }
+        }
+        #screen-1-splash .subtitle {
+            font-size: 1.125rem; /* text-lg */
+            color: #374151; /* text-gray-700 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+        #screen-1-splash .card-grid {
+            display: grid;
+            grid-template-columns: repeat(1, minmax(0, 1fr)); /* grid-cols-1 */
+            gap: 1.5rem; /* gap-6 */
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            #screen-1-splash .card-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr)); /* md:grid-cols-3 */
+            }
+        }
         .character-card {
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1.5rem; /* p-6 */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            border: 1px solid #e5e7eb; /* border border-gray-200 */
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -38,20 +104,383 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+        /* NEW: SVG Icon styles */
+        .character-card .svg-icon {
+            width: 8rem; /* w-32 */
+            height: 8rem; /* h-32 */
+            border-radius: 9999px; /* rounded-full */
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 1rem; /* mb-4 */
+            border: 4px solid #ffffff; /* border-4 border-white */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-lg */
+            padding: 1.5rem; /* p-6 */
+        }
+        .icon-laura { background-color: #bfdbfe; color: #1e3a8a; }
+        .icon-ana { background-color: #fecaca; color: #7f1d1d; }
+        .icon-michel { background-color: #bbf7d0; color: #14532d; }
         
-        /* 6. REMOVED fixed height for #website-container */
-        
-        /* 7. REMOVED the .instructional-panel CSS rule. */
-        /* Flexbox will now handle the height automatically */
-        
+        .character-card h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .character-card .text-blue-800 { color: #1e40af; }
+        .character-card .text-red-800 { color: #991b1b; }
+        .character-card .text-green-800 { color: #166534; }
+        .character-card p {
+            color: #4b5563; /* text-gray-600 */
+        }
+        #screen-1-splash .footer-nav {
+            background-color: #f9fafb; /* bg-gray-50 */
+            padding: 1rem; /* p-4 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem; /* gap-4 */
+            border-top: 1px solid #e5e7eb; /* border-t border-gray-200 */
+        }
+        .footer-nav button {
+            background-color: #ffffff; /* bg-white */
+            border: 1px solid #d1d5db; /* border border-gray-300 */
+            color: #374151; /* text-gray-700 */
+            padding: 0.5rem 1.5rem; /* py-2 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .footer-nav button:hover {
+            background-color: #f9fafb; /* hover:bg-gray-50 */
+        }
+
+        /* 4. Screen 2: Simulation */
+        #screen-2-simulation {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+        #screen-2-simulation .sim-header {
+            background-color: #1f2937; /* bg-gray-800 */
+            color: #ffffff; /* text-white */
+            padding: 1rem; /* p-4 */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .sim-header button {
+            background-color: #374151; /* bg-gray-700 */
+            color: #ffffff; /* text-white */
+            padding: 0.25rem 0.75rem; /* py-1 px-3 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.3s ease;
+            font-size: 0.875rem; /* text-sm */
+            cursor: pointer;
+            border: none;
+        }
+        .sim-header button:hover {
+            background-color: #4b5563; /* hover:bg-gray-600 */
+        }
+        .sim-header h2 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600;
+        }
+        .sim-header .spacer {
+            width: 4rem; /* w-16 */
+        }
+
+        /* 5. Sim Split Layout */
+        .sim-split-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column; /* flex-col */
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .sim-split-container {
+                flex-direction: row; /* md:flex-row */
+            }
+        }
+        /* 5a. Left Column (Visual) */
+        .sim-visual-stage {
+            width: 100%;
+            background-color: #374151; /* bg-gray-700 */
+            position: relative;
+            overflow: hidden;
+            height: 16rem; /* h-64 */
+        }
+        @media (min-width: 768px) {
+            .sim-visual-stage {
+                width: 60%; /* md:w-3/5 */
+                height: 100%; /* md:h-full */
+            }
+        }
+        /* NEW: SVG Background */
+        .sim-visual-stage #stage-bg-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        #character-visuals {
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-left: 3rem; /* px-12 */
+            padding-right: 3rem;
+            padding-bottom: 2rem; /* pb-8 */
+        }
+        /* NEW: SVG Character Icon */
+        .character-svg {
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-radius: 0.375rem; /* rounded-md */
+            max-height: 16rem; /* max-h-64 */
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+        }
+        @media (min-width: 768px) {
+            .character-svg { max-height: 20rem; } /* md:max-h-80 */
+        }
+        @media (min-width: 1024px) {
+            .character-svg { max-height: 24rem; } /* lg:max-h-96 */
+        }
+        .character-svg.active {
+            border-color: #3B82F6; /* blue-500 */
+            transform: scale(1.05);
+        }
+
+        /* 5b. Right Column (Instructional) */
+        .sim-instructional-panel {
+            width: 100%;
+            background-color: #ffffff; /* bg-white */
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        @media (min-width: 768px) {
+            .sim-instructional-panel {
+                width: 40%; /* md:w-2/5 */
+            }
+        }
+        .sim-instructional-panel .content-scroller {
+            flex-grow: 1;
+            padding: 1.5rem; /* p-6 */
+            overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+            .sim-instructional-panel .content-scroller {
+                padding: 2rem; /* md:p-8 */
+            }
+        }
+        .scenario-part h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;
+            margin-bottom: 1rem; /* mb-4 */
+            color: #1f2937; /* text-gray-800 */
+        }
+        /* Bio Section */
+        #scenario-bio .bio-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem; /* gap-6 */
+        }
+        /* NEW: SVG Bio Image */
+        #scenario-bio .bio-svg {
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+            width: 100%;
+            height: 12rem; /* h-48 */
+        }
+        #scenario-bio p {
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+        #scenario-bio ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem; /* space-y-2 */
+        }
+        /* Intro Section */
+        #scenario-intro p {
+            font-size: 1.125rem; /* text-lg */
+            color: #374151; /* text-gray-700 */
+        }
+        /* Dialogue Section */
+        #dialogue-display {
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 1rem; /* p-4 */
+            min-height: 150px;
+        }
+        #speaker-name {
+            font-weight: 700;
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 0.5rem; /* mb-2 */
+            color: #1e40af; /* text-blue-800 */
+        }
+        #dialogue-text {
+            font-size: 1.25rem; /* text-xl */
+            font-style: italic;
+            color: #374151; /* text-gray-700 */
+        }
+        /* Assessment Section */
+        #assessment-question {
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 1.5rem; /* mb-6 */
+        }
+        #assessment-feedback {
+            color: #dc2626; /* text-red-600 */
+            margin-bottom: 1rem; /* mb-4 */
+            font-style: italic;
+            font-weight: 500;
+        }
+        #assessment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* gap-4 */
+        }
+        #assessment-options button {
+            text-align: left;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #374151; /* text-gray-700 */
+            padding: 1rem; /* p-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.3s ease;
+            font-size: 1rem; /* text-md */
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+        }
+        #assessment-options button:hover {
+            background-color: #e5e7eb; /* hover:bg-gray-200 */
+        }
+        /* Knowledge Blurb */
+        #knowledge-feedback {
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 1rem; /* mb-4 */
+            font-weight: 600;
+        }
+        #knowledge-text {
+            font-size: 1rem; /* text-md or text-lg */
+        }
+        #knowledge-source {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* text-gray-500 */
+            margin-top: 1rem; /* mt-4 */
+        }
+        /* Reflection/End */
+        #scenario-reflection p, #scenario-end p {
+            font-size: 1.125rem; /* text-lg */
+        }
+        /* Sim Footer */
+        .sim-footer-nav {
+            background-color: #f9fafb; /* bg-gray-50 */
+            padding: 1rem; /* p-4 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px solid #e5e7eb; /* border-t border-gray-200 */
+        }
+        #continue-button {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: #ffffff; /* text-white */
+            padding: 0.5rem 2rem; /* py-2 px-8 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-lg */
+            transition: all 0.3s ease;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        #continue-button:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+        #continue-button:disabled {
+            background-color: #9ca3af; /* bg-gray-400 */
+            cursor: not-allowed;
+        }
+
+        /* 6. Modals */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            padding: 1rem; /* p-4 */
+        }
+        .modal-content {
+            background-color: #ffffff; /* bg-white */
+            width: 100%;
+            max-width: 32rem; /* max-w-lg */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+            overflow: hidden;
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem; /* p-4 */
+            border-bottom: 1px solid #e5e7eb; /* border-b */
+        }
+        .modal-header h3 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600;
+            color: #1f2937; /* text-gray-800 */
+        }
+        .modal-header button {
+            color: #9ca3af; /* text-gray-400 */
+            font-size: 1.875rem; /* text-3xl */
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .modal-header button:hover {
+            color: #4b5563; /* hover:text-gray-600 */
+        }
+        .modal-body {
+            padding: 1.5rem; /* p-6 */
+            color: #374151; /* text-gray-700 */
+        }
+        .modal-body ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem; /* space-y-2 */
+        }
+        .modal-body .space-y-4 > * + * {
+             margin-top: 1rem;
+        }
+
+
+        /* 7. Utility Classes */
+        .hidden {
+            display: none;
+        }
+        .flex {
+            display: flex;
+        }
     </style>
 </head>
-<!-- 8. NEW: Body is now the container that centers the "window" -->
 <body class="bg-gray-100 flex items-center justify-center min-h-screen p-4 md:p-8">
-
-    <!-- 9. REMOVED the outer wrapper div -->
         
-    <!-- 10. NEW: This is the main "Website" content, now a centered "window" -->
+    <!-- NEW: This is the main "Website" content, now a centered "window" -->
     <div id="website-container" class="w-full max-w-7xl bg-white shadow-2xl flex flex-col rounded-lg overflow-hidden" style="height: 85vh;">
 
         <!-- ====================================================== -->
@@ -59,46 +488,45 @@
         <!-- ====================================================== -->
         <div id="screen-1-splash" class="flex-1 flex flex-col h-full">
             <!-- This inner div centers the content -->
-            <div class="flex-1 p-8 md:p-12 flex flex-col items-center justify-center text-center w-full max-w-3xl mx-auto overflow-y-auto">
+            <div class="content">
                 
-                <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-                    The Lived Experience
-                </h1>
-                <p class="text-lg text-gray-700 mb-8">
-                    Choose a perspective to begin.
-                </p>
+                <h1>The Lived Experience</h1>
+                <p class="subtitle">Choose a perspective to begin.</p>
 
-                <!-- 11. Character Selection Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                <!-- Character Selection Cards -->
+                <div class="card-grid">
                     <!-- LAURA -->
-                    <div onclick="startSimulation('laura')" class="character-card bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-                        <img src="https://placehold.co/200x200/bfdbfe/1e3a8a?text=Laura" alt="Laura" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
-                        <h3 class="text-2xl font-semibold text-blue-800 mb-2">Laura</h3>
-                        <p class="text-gray-600">"I just... your name is on the tip of my tongue, dear..."</p>
+                    <div onclick="startSimulation('laura')" class="character-card">
+                        <!-- NEW: Replaced <img> with inline SVG -->
+                        <svg class="svg-icon icon-laura" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <h3 class="text-blue-800">Laura</h3>
+                        <p>"I just... your name is on the tip of my tongue, dear..."</p>
                     </div>
                     
                     <!-- ANA -->
-                    <div onclick="startSimulation('ana')" class="character-card bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-                        <img src="https://placehold.co/200x200/fecaca/7f1d1d?text=Ana" alt="Ana" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
-                        <h3 class="text-2xl font-semibold text-red-800 mb-2">Ana</h3>
-                        <p class="text-gray-600">"Oh, don't worry about me. You all go ahead, I'll be fine."</p>
+                    <div onclick="startSimulation('ana')" class="character-card">
+                        <!-- NEW: Replaced <img> with inline SVG -->
+                        <svg class="svg-icon icon-ana" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <h3 class="text-red-800">Ana</h3>
+                        <p>"Oh, don't worry about me. You all go ahead, I'll be fine."</p>
                     </div>
 
                     <!-- MICHEL -->
-                    <div onclick="startSimulation('michel')" class="character-card bg-gray-50 rounded-lg p-6 shadow-md border border-gray-200">
-                        <img src="https://placehold.co/200x200/bbf7d0/14532d?text=Michel" alt="Michel" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-lg">
-                        <h3 class="text-2xl font-semibold text-green-800 mb-2">Michel</h3>
-                        <p class="text-gray-600">"It's nothing. Just a lot of noise in here, that's all."</p>
+                    <div onclick="startSimulation('michel')" class="character-card">
+                        <!-- NEW: Replaced <img> with inline SVG -->
+                        <svg class="svg-icon icon-michel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <h3 class="text-green-800">Michel</h3>
+                        <p>"It's nothing. Just a lot of noise in here, that's all."</p>
                     </div>
                 </div>
             </div>
             
-            <!-- 12. Navigation for the splash screen -->
-            <div class="bg-gray-50 p-4 flex items-center justify-center gap-4 border-t border-gray-200">
-                <button onclick="showModal('modal-objectives')" class="bg-white border border-gray-300 text-gray-700 py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+            <!-- Navigation for the splash screen -->
+            <div class="footer-nav">
+                <button onclick="showModal('modal-objectives')">
                     Learning Objectives
                 </button>
-                <button onclick="showModal('modal-instructions')" class="bg-white border border-gray-300 text-gray-700 py-2 px-6 rounded-lg shadow-sm hover:bg-gray-50 transition-all">
+                <button onclick="showModal('modal-instructions')">
                     Instructions & Help
                 </button>
             </div>
@@ -108,98 +536,123 @@
         <!-- Screen 2: The Simulation Scene (NEW SPLIT LAYOUT)      -->
         <!-- ====================================================== -->
         <div id="screen-2-simulation" class="flex-1 flex flex-col h-full relative hidden">
-            <!-- 13. HEADER -->
-            <div class="bg-gray-800 text-white p-4 flex items-center justify-between">
-                <button onclick="showScreen('screen-1-splash')" class="bg-gray-700 text-white py-1 px-3 rounded-lg hover:bg-gray-600 transition-all text-sm">
+            <!-- HEADER -->
+            <div class="sim-header">
+                <button onclick="showScreen('screen-1-splash')">
                     &larr; Exit
                 </button>
-                <h2 id="scenario-title" class="text-xl font-semibold"></h2>
-                <div class="w-16"></div> <!-- Spacer -->
+                <h2 id="scenario-title"></h2>
+                <div class="spacer"></div> <!-- Spacer -->
             </div>
             
-            <!-- 14. Split-Screen Container -->
-            <!-- The `flex-1` here makes it fill the remaining height -->
-            <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+            <!-- Split-Screen Container -->
+            <div class="sim-split-container">
                 
-                <!-- 15. LEFT COLUMN: VISUAL STAGE -->
-                <!-- Added `h-64 md:h-full` so it has a height on mobile, but fills on desktop -->
-                <div class="w-full md:w-3/5 bg-gray-700 relative overflow-hidden h-64 md:h-full">
-                    <img id="stage-bg" src="" class="absolute inset-0 w-full h-full object-cover z-0" alt="Scenario Background">
+                <!-- LEFT COLUMN: VISUAL STAGE -->
+                <div class="sim-visual-stage">
+                    <!-- NEW: Replaced <img> with inline SVG background -->
+                    <svg id="stage-bg-svg" class="absolute inset-0 w-full h-full object-cover z-0" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+                        <defs>
+                            <linearGradient id="grad-laura" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#dbeafe;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#bbf7d0;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="grad-ana" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#e0e7ff;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#fecaca;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="grad-michel" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fde68a;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#fca5a5;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect id="stage-bg-rect" width="100%" height="100%" fill="url(#grad-laura)" />
+                    </svg>
                     
                     <!-- Character Visuals Container -->
                     <div id="character-visuals" class="hidden z-10 w-full h-full absolute flex justify-between items-end px-12 pb-8">
-                            <img id="char-1" src="" alt="Character 1" class="character-img rounded-md max-h-64 md:max-h-80 lg:max-h-96">
-                            <img id="char-2" src="" alt="Character 2" class="character-img rounded-md max-h-64 md:max-h-80 lg:max-h-96">
+                            <!-- NEW: Replaced <img> with inline SVG -->
+                            <svg id="char-1" class="character-svg" viewBox="0 0 100 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="white" fill-opacity="0.3"/>
+                                <path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="white" fill-opacity="0.5"/>
+                            </svg>
+                            <svg id="char-2" class="character-svg" viewBox="0 0 100 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="white" fill-opacity="0.3"/>
+                                <path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="white" fill-opacity="0.5"/>
+                            </svg>
                     </div>
                 </div>
 
-                <!-- 16. RIGHT COLUMN: INSTRUCTIONAL PANEL -->
-                <!-- `flex-1` and `overflow-hidden` are key here -->
-                <div class="w-full md:w-2/5 bg-white flex flex-col flex-1 overflow-hidden">
+                <!-- RIGHT COLUMN: INSTRUCTIONAL PANEL -->
+                <div class="sim-instructional-panel">
                     <!-- This inner div handles the content and scrolling -->
-                    <div class="flex-1 p-6 md:p-8 overflow-y-auto">
+                    <div class="content-scroller">
                         <!-- Part 0: Character Bio (Dynamic) -->
                         <div id="scenario-bio" class="scenario-part hidden">
-                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Character Bio: <span id="bio-name"></span></h3>
-                            <div class="flex flex-col gap-6">
-                                <img id="bio-img" src="" alt="Bio Photo" class="rounded-lg shadow-md w-full h-48 object-cover">
+                            <h3>Character Bio: <span id="bio-name"></span></h3>
+                            <div class="bio-grid">
+                                <!-- NEW: Replaced <img> with inline SVG -->
+                                <svg id="bio-img-svg" class="bio-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="24" height="24" rx="8" fill="#e0e7ff"/>
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#4b5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <circle cx="12" cy="7" r="4" stroke="#4b5563" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
                                 <div class="flex-1">
-                                    <p id="bio-intro" class="text-lg mb-4"></p>
-                                    <ul id="bio-bullets" class="list-disc list-inside space-y-2"></ul>
+                                    <p id="bio-intro"></p>
+                                    <ul id="bio-bullets"></ul>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Part 1: Introduction (Dynamic) -->
                         <div id="scenario-intro" class="scenario-part hidden">
-                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Introduction: <span id="intro-title"></span></h3>
-                            <p id="intro-text" class="text-lg text-gray-700"></p>
+                            <h3>Introduction: <span id="intro-title"></span></h3>
+                            <p id="intro-text"></p>
                         </div>
 
                         <!-- Part 2: Dialogue (Dynamic) -->
                         <div id="scenario-dialogue" class="scenario-part hidden">
-                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Dialogue</h3>
-                            <!-- This is where dialogue lines will appear -->
-                            <div id="dialogue-display" class="bg-gray-50 rounded-lg p-4 min-h-[150px]">
-                                <div id="speaker-name" class="font-bold text-lg mb-2 text-blue-800"></div>
-                                <p id="dialogue-text" class="text-xl italic text-gray-700"></p>
+                            <h3>Dialogue</h3>
+                            <div id="dialogue-display">
+                                <div id="speaker-name"></div>
+                                <p id="dialogue-text"></p>
                             </div>
                         </div>
                         
                         <!-- Part 3: Assessment (Dynamic) -->
                         <div id="scenario-assessment" class="scenario-part hidden">
-                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Assessment</h3>
-                                <p id="assessment-question" class="text-lg mb-6"></p>
-                                <div id="assessment-feedback" class="text-red-600 mb-4 hidden italic font-medium"></div>
-                                <div id="assessment-options" class="flex flex-col gap-4">
+                                <h3>Assessment</h3>
+                                <p id="assessment-question"></p>
+                                <div id="assessment-feedback" class="hidden"></div>
+                                <div id="assessment-options">
                                 <!-- Options will be dynamically inserted here -->
                                 </div>
                         </div>
                         
                         <!-- Part 4: Knowledge Blurb (Dynamic) -->
                         <div id="scenario-knowledge-blurb" class="scenario-part hidden">
-                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Knowledge Blurb</h3>
-                                <p id="knowledge-feedback" class="text-lg mb-4 font-semibold"></p>
-                                <p id="knowledge-text" class="text-md md:text-lg"></p>
-                                <p id="knowledge-source" class="text-sm text-gray-500 mt-4"></p>
+                                <h3>Knowledge Blurb</h3>
+                                <p id="knowledge-feedback"></p>
+                                <p id="knowledge-text"></p>
+                                <p id="knowledge-source"></p>
                         </div>
         
                         <!-- Part 5: Reflection (Dynamic) -->
                         <div id="scenario-reflection" class="scenario-part hidden">
-                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">Reflection</h3>
-                                <p id="reflection-text" class="text-lg"></p>
+                                <h3>Reflection</h3>
+                                <p id="reflection-text"></p>
                         </div>
         
                         <!-- Part 6: End (Overlay) -->
                         <div id="scenario-end" class="scenario-part hidden">
-                                <h3 class="text-2xl font-semibold mb-4 text-gray-800">End of Scenario</h3>
-                                <p class="text-lg">You have completed this scenario. Click "Exit" in the header to return to the main menu.</p>
+                                <h3>End of Scenario</h3>
+                                <p>You have completed this scenario. Click "Exit" in the header to return to the main menu.</p>
                         </div>
                     </div>
                     
-                    <!-- 17. Navigation for the scenario (NOW INSIDE RIGHT COLUMN) -->
-                    <div class="bg-gray-50 p-4 flex items-center justify-center border-t border-gray-200">
-                        <button id="continue-button" class="bg-blue-600 text-white py-2 px-8 rounded-lg shadow-lg hover:bg-blue-700 transition-all font-semibold" disabled>
+                    <!-- Navigation for the scenario (NOW INSIDE RIGHT COLUMN) -->
+                    <div class="sim-footer-nav">
+                        <button id="continue-button" disabled>
                             Continue
                         </button>
                     </div>
@@ -211,19 +664,17 @@
 
     <!-- ====================================================== -->
     <!-- MODALS (Pop-ups)                                       -->
-    <!-- These are now correctly placed outside the container   -->
-    <!-- but inside the body.                                   -->
     <!-- ====================================================== -->
 
-    <!-- 18. Learning Objectives Modal -->
-    <div id="modal-objectives" class="fixed inset-0 z-50 modal-backdrop items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-lg rounded-lg shadow-xl overflow-hidden">
-            <div class="flex items-center justify-between p-4 border-b">
-                <h3 class="text-xl font-semibold text-gray-800">Learning Objectives</h3>
-                <button onclick="closeModal('modal-objectives')" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+    <!-- Learning Objectives Modal -->
+    <div id="modal-objectives" class="modal-backdrop hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Learning Objectives</h3>
+                <button onclick="closeModal('modal-objectives')">&times;</button>
             </div>
-            <div class="p-6">
-                <ul class="list-disc list-inside space-y-2 text-gray-700">
+            <div class="modal-body">
+                <ul>
                     <li>Identify and challenge common myths and misconceptions about the aging process.</li>
                     <li>Analyze scenarios from the perspective of an elderly individual.</li>
                     <li>Recognize the social and emotional impacts of cognitive, sensory, and social challenges related to aging.</li>
@@ -233,30 +684,30 @@
         </div>
     </div>
 
-    <!-- 19. Instructions & Help Modal -->
-    <div id="modal-instructions" class="fixed inset-0 z-50 modal-backdrop items-center justify-center p-4 hidden">
-            <div class="bg-white w-full max-w-lg rounded-lg shadow-xl overflow-hidden">
-            <div class="flex items-center justify-between p-4 border-b">
-                <h3 class="text-xl font-semibold text-gray-800">Instructions & Help</h3>
-                <button onclick="closeModal('modal-instructions')" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
+    <!-- Instructions & Help Modal -->
+    <div id="modal-instructions" class="modal-backdrop hidden">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h3>Instructions & Help</h3>
+                <button onclick="closeModal('modal-instructions')">&times;</button>
             </div>
-            <div class="p-6 text-gray-700 space-y-4">
-                <p>Welcome to the simulation. Your goal is to navigate the scenarios and consider the perspective of the person you are embodying.</p>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>Select a character to begin their story.</li>
-                    <li>Read the bio and introduction to understand their context.</li>
-                    <li>Click "Continue" to advance the dialogue.</li>
-                    <li>When prompted, make a choice or complete an assessment.</li>
-                    <li>After each scenario, take a moment to complete the reflection.</li>
-                </ul>
+            <div class="modal-body">
+                <div class="space-y-4">
+                    <p>Welcome to the simulation. Your goal is to navigate the scenarios and consider the perspective of the person you are embodying.</p>
+                    <ul>
+                        <li>Select a character to begin their story.</li>
+                        <li>Read the bio and introduction to understand their context.</li>
+                        <li>Click "Continue" to advance the dialogue.</li>
+                        <li>When prompted, make a choice or complete an assessment.</li>
+                        <li>After each scenario, take a moment to complete the reflection.</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 20. REMOVED the stray closing div -->
-
     <!-- ====================================================== -->
-    <!-- JAVASCRIPT LOGIC (Unchanged)                           -->
+    <!-- JAVASCRIPT LOGIC (With Bug Fix)                        -->
     <!-- ====================================================== -->
     <script>
         // ======================================================
@@ -267,7 +718,11 @@
                 title: "Laura's Day: The Pharmacy",
                 bio: {
                     name: "Laura (87)",
-                    img: "https://placehold.co/400x300/bfdbfe/1e3a8a?text=Laura's+Bio+Photo",
+                    // NEW: SVG Icon data
+                    svg: {
+                        bg: "url(#grad-laura)",
+                        icon: `<rect width="24" height="24" rx="8" fill="#bfdbfe"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+                    },
                     intro: "You are about to step into the shoes of Laura (87).",
                     bullets: [
                         "Widowed for 10 years.",
@@ -281,9 +736,9 @@
                     text: "You are Laura. You've just had a lovely lunch with friends and stop by the pharmacy on your way home. You're feeling good, but also a little tired from all the talking."
                 },
                 scene: {
-                    bg: "https://placehold.co/1200x800/bbf7d0/f0fdf4?text=Pharmacy+Background",
-                    char1: { id: "char-1", src: "https://placehold.co/400x600/bfdbfe/1e3a8a?text=Laura+(87)" },
-                    char2: { id: "char-2", src: "https://placehold.co/400x600/fed7aa/7c2d12?text=Pharmacist" }
+                    // NEW: SVG char definitions
+                    char1: { id: "char-1", alt: "Laura (87)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#bfdbfe" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#bfdbfe" fill-opacity="0.8"/>` },
+                    char2: { id: "char-2", alt: "Pharmacist", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#fed7aa" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#fed7aa" fill-opacity="0.8"/>` }
                 },
                 dialogue: [
                     { speaker: "Pharmacist", text: "Hello, how are you doing today?" },
@@ -312,7 +767,10 @@
                 title: "Ana's Weekly Call",
                 bio: {
                     name: "Ana (76)",
-                    img: "https://placehold.co/400x300/fecaca/7f1d1d?text=Ana's+Bio+Photo",
+                    svg: {
+                        bg: "url(#grad-ana)",
+                        icon: `<rect width="24" height="24" rx="8" fill="#fecaca"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#7f1d1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="#7f1d1d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+                    },
                     intro: "You are about to step into the shoes of Ana (76).",
                     bullets: [
                         "Lives in a retirement community.",
@@ -326,9 +784,8 @@
                     text: "You are Ana. It's Sunday at 2:00 PM, time for the weekly family video call. Your son, Miguel, is starting the call. You grab your new tablet, open the 'Zoom' app like he showed you, and wait."
                 },
                 scene: {
-                    bg: "https://placehold.co/1200x800/e0e7ff/3730a3?text=Ana's+Living+Room",
-                    char1: { id: "char-1", src: "https://placehold.co/400x600/fecaca/7f1d1d?text=Ana+(76)" },
-                    char2: { id: "char-2", src: "https://placehold.co/400x600/c7d2fe/312e81?text=Laptop+Screen" }
+                    char1: { id: "char-1", alt: "Ana (76)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#fecaca" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#fecaca" fill-opacity="0.8"/>` },
+                    char2: { id: "char-2", alt: "Laptop", svg: `<rect x="20" y="30" width="60" height="90" rx="5" fill="#c7d2fe" fill-opacity="0.7" /><rect x="10" y="120" width="80" height="5" rx="2" fill="#c7d2fe" fill-opacity="0.7" />` }
                 },
                 dialogue: [
                     { speaker: "Narrator", text: "You see the 'Join Meeting' button and tap it. A box pops up: 'Allow Zoom to access your microphone and camera?'" },
@@ -358,7 +815,10 @@
                 title: "Michel's Birthday Dinner",
                 bio: {
                     name: "Michel (82)",
-                    img: "https://placehold.co/400x300/bbf7d0/14532d?text=Michel's+Bio+Photo",
+                    svg: {
+                        bg: "url(#grad-michel)",
+                        icon: `<rect width="24" height="24" rx="8" fill="#bbf7d0"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#14532d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="#14532d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
+                    },
                     intro: "You are about to step into the shoes of Michel (82).",
                     bullets: [
                         "Retired professor.",
@@ -372,9 +832,8 @@
                     text: "You are Michel. Your family is taking you to your favorite (but very loud) Italian restaurant for your 82nd birthday. You're at a big, round table with your children and grandchildren."
                 },
                 scene: {
-                    bg: "https://placehold.co/1200x800/fde68a/b45309?text=Loud+Restaurant",
-                    char1: { id: "char-1", src: "https://placehold.co/400x600/bbf7d0/14532d?text=Michel+(82)" },
-                    char2: { id: "char-2", src: "https://placehold.co/400x600/dbeafe/1e40af?text=Family" }
+                    char1: { id: "char-1", alt: "Michel (82)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#bbf7d0" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#bbf7d0" fill-opacity="0.8"/>` },
+                    char2: { id: "char-2", alt: "Family", svg: `<path d="M40 40C33 40 27 46 27 53V60H53V53C53 46 47 40 40 40Z" fill="#dbeafe" fill-opacity="0.6"/><path d="M15 150V135C15 122.8 24.8 113 37 113C49.2 113 59 122.8 59 135V150H15Z" fill="#dbeafe" fill-opacity="0.8"/><path d="M70 40C63 40 57 46 57 53V60H83V53C83 46 77 40 70 40Z" fill="#dbeafe" fill-opacity="0.6"/><path d="M45 150V135C45 122.8 54.8 113 67 113C79.2 113 89 122.8 89 135V150H45Z" fill="#dbeafe" fill-opacity="0.8"/>` }
                 },
                 dialogue: [
                     { speaker: "Narrator", text: "The restaurant is buzzing. Plates clatter. People are laughing. Your granddaughter, Sarah, is telling a story from college." },
@@ -432,11 +891,12 @@
             document.getElementById('screen-2-simulation').classList.add('hidden');
             
             // Un-hide the requested screen
-            document.getElementById(screenId).classList.remove('hidden');
+            const screen = document.getElementById(screenId);
+            screen.classList.remove('hidden');
             
             // Special case for splash screen: ensure it's flex
             if (screenId === 'screen-1-splash') {
-                 document.getElementById(screenId).classList.add('flex');
+                 screen.classList.add('flex');
             }
 
             // NEW: Hide character visuals when exiting
@@ -464,7 +924,7 @@
             
             // Get the first name from the alt tag
             const char1Name = char1.alt.split(' ')[0];
-            const char2Name = char2.alt.split(' ')[0];
+            const char2Name = (char2.alt || "Other").split(' ')[0];
 
             if (speaker === char1Name) {
                 char1.classList.add('active');
@@ -486,21 +946,25 @@
             // 1. Setup UI
             showScreen('screen-2-simulation');
             document.getElementById('scenario-title').textContent = currentScenario.title;
-            document.getElementById('stage-bg').src = currentScenario.scene.bg;
+            
+            // NEW: Set SVG Background
+            document.getElementById('stage-bg-rect').setAttribute('fill', currentScenario.bio.svg.bg);
             
             // Show character visuals panel
             document.getElementById('character-visuals').classList.remove('hidden');
             
+            // NEW: Set SVG Characters
             char1 = document.getElementById('char-1');
             char2 = document.getElementById('char-2');
-            char1.src = currentScenario.scene.char1.src;
-            char1.alt = currentScenario.bio.name; // e.g., "Laura (87)"
-            char2.src = currentScenario.scene.char2.src;
-            char2.alt = currentScenario.scene.char2.alt || "Other";
+            char1.innerHTML = currentScenario.scene.char1.svg;
+            char1.alt = currentScenario.scene.char1.alt;
+            char2.innerHTML = currentScenario.scene.char2.svg;
+            char2.alt = currentScenario.scene.char2.alt;
 
             // 2. Load Bio
             document.getElementById('bio-name').textContent = currentScenario.bio.name;
-            document.getElementById('bio-img').src = currentScenario.bio.img;
+            // NEW: Set SVG Bio Icon
+            document.getElementById('bio-img-svg').innerHTML = currentScenario.bio.svg.icon;
             document.getElementById('bio-intro').textContent = currentScenario.bio.intro;
             
             const bulletsUl = document.getElementById('bio-bullets');
@@ -557,6 +1021,7 @@
         function updateDialogueLine() {
             const line = dialogueLines[currentDialogueIndex];
             document.getElementById('dialogue-text').textContent = line.text;
+            // BUG FIX: Removed stray period from 'speaker-name'
             document.getElementById('speaker-name').textContent = line.speaker;
             setActiveSpeaker(line.speaker.split(' ')[0]); // Pass first name
         }
@@ -571,7 +1036,7 @@
             
             assessment.options.forEach((option, index) => {
                 const button = document.createElement('button');
-                button.className = "text-left bg-gray-100 text-gray-700 p-4 rounded-lg hover:bg-gray-200 transition-all text-md font-medium";
+                // Removed the hardcoded classes from the JS, they are in the CSS now
                 button.textContent = option.text;
                 button.onclick = () => checkAssessment(option.correct);
                 optionsDiv.appendChild(button);
