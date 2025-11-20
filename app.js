@@ -216,18 +216,19 @@
 
         // --- Screen Management ---
         function showScreen(screenId) {
+            // Hide all screens
             document.getElementById('screen-1-splash').classList.add('hidden');
             document.getElementById('screen-2-simulation').classList.add('hidden');
 
+            // Show the target screen
             const screen = document.getElementById(screenId);
             screen.classList.remove('hidden');
 
+            // Reset UI elements when returning to the splash screen
             if (screenId === 'screen-1-splash') {
-                 screen.classList.add('flex');
-                 // Reset UI elements when going home
-                 document.getElementById('character-visuals').classList.add('hidden');
-                 if (char1) char1.classList.remove('active');
-                 if (char2) char2.classList.remove('active');
+                document.getElementById('character-visuals').classList.add('hidden');
+                if (char1) char1.classList.remove('active');
+                if (char2) char2.classList.remove('active');
             }
         }
 
