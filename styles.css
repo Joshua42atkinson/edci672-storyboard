@@ -1,0 +1,31 @@
+
+        /* 1. Base Font */
+        body {
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        /* 2. Custom class for images to add a subtle border */
+        .character-svg {
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-radius: 0.375rem; /* rounded-md */
+            max-height: 16rem; /* max-h-64 */
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+        }
+        @media (min-width: 768px) {
+            .character-svg { max-height: 20rem; } /* md:max-h-80 */
+        }
+        @media (min-width: 1024px) {
+            .character-svg { max-height: 24rem; } /* lg:max-h-96 */
+        }
+        .character-svg.active {
+            border-color: #3B82F6; /* blue-500 */
+            transform: scale(1.05);
+        }
+
+        /* 3. Custom styles for a simple, clean modal background */
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
