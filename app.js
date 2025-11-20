@@ -36,8 +36,8 @@
                     text: "You are Laura. You've just had a lovely lunch with friends and stop by the pharmacy on your way home. You're feeling good, but also a little tired from all the talking. **This scene focuses on the affective impact of a common cognitive lapse.**"
                 },
                 scene: {
-                    char1: { id: "char-1", alt: "Laura (87)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#bfdbfe" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#bfdbfe" fill-opacity="0.8"/>` },
-                    char2: { id: "char-2", alt: "Pharmacist", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#fed7aa" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#fed7aa" fill-opacity="0.8"/>` }
+                    char1: { id: "char-1", alt: "Laura (87)", svg: `<path d="M50,150 C25,150 25,120 25,120 C25,90 40,80 50,80 C60,80 75,90 75,120 C75,120 75,150 50,150 Z" fill="#E0E7FF" /><circle cx="50" cy="50" r="20" fill="#E0E7FF" /><path d="M40,50 a5,5 0 1,1 20,0" fill="none" stroke="#4B5563" stroke-width="2" />` },
+                    char2: { id: "char-2", alt: "Pharmacist", svg: `<path d="M50,150 C25,150 25,120 25,120 C25,90 40,80 50,80 C60,80 75,90 75,120 C75,120 75,150 50,150 Z" fill="#C7D2FE" /><circle cx="50" cy="50" r="20" fill="#C7D2FE" /><path d="M40,50 a5,5 0 1,1 20,0" fill="none" stroke="#4B5563" stroke-width="2" />` }
                 },
                 dialogue: [
                     { speaker: "Pharmacist", text: "Hello, how are you doing today?" },
@@ -97,7 +97,7 @@
                     text: "You are Ana. It's Sunday at 2:00 PM, time for the weekly family video call. Your son, Miguel, is starting the call. You grab your new tablet, open the 'Zoom' app like he showed you, and wait. **This scene focuses on the social impact of the digital divide.**"
                 },
                 scene: {
-                    char1: { id: "char-1", alt: "Ana (76)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#fecaca" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#fecaca" fill-opacity="0.8"/>` },
+                    char1: { id: "char-1", alt: "Ana (76)", svg: `<path d="M50,150 C25,150 25,120 25,120 C25,90 40,80 50,80 C60,80 75,90 75,120 C75,120 75,150 50,150 Z" fill="#FECACA" /><circle cx="50" cy="50" r="20" fill="#FECACA" /><path d="M40,50 a5,5 0 1,1 20,0" fill="none" stroke="#7F1D1D" stroke-width="2" />` },
                     char2: { id: "char-2", alt: "Laptop", svg: `<rect x="20" y="30" width="60" height="90" rx="5" fill="#c7d2fe" fill-opacity="0.7" /><rect x="10" y="120" width="80" height="5" rx="2" fill="#c7d2fe" fill-opacity="0.7" />` }
                 },
                 dialogue: [
@@ -163,8 +163,8 @@
                     text: "You are John. Your daughter has asked you to pick up a few things from the grocery store. You're happy to help, but your arthritis is bothering you today. **This scene focuses on the internal conflict between independence and seeking help.**"
                 },
                 scene: {
-                    char1: { id: "char-1", alt: "John (78)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#cce7f0" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#cce7f0" fill-opacity="0.8"/>` },
-                    char2: { id: "char-2", alt: "Stock Clerk", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#fed7aa" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#fed7aa" fill-opacity="0.8"/>` }
+                    char1: { id: "char-1", alt: "John (78)", svg: `<path d="M50,150 C25,150 25,120 25,120 C25,90 40,80 50,80 C60,80 75,90 75,120 C75,120 75,150 50,150 Z" fill="#D1FAE5" /><circle cx="50" cy="50" r="20" fill="#D1FAE5" /><path d="M40,50 a5,5 0 1,1 20,0" fill="none" stroke="#065F46" stroke-width="2" />` },
+                    char2: { id: "char-2", alt: "Stock Clerk", svg: `<path d="M50,150 C25,150 25,120 25,120 C25,90 40,80 50,80 C60,80 75,90 75,120 C75,120 75,150 50,150 Z" fill="#FEF3C7" /><circle cx="50" cy="50" r="20" fill="#FEF3C7" /><path d="M40,50 a5,5 0 1,1 20,0" fill="none" stroke="#92400E" stroke-width="2" />` }
                 },
                 dialogue: [
                     { speaker: "Narrator", text: "You're in the cereal aisle. Your granddaughter's favorite brand is on the top shelf." },

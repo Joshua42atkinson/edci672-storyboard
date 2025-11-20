@@ -2,6 +2,12 @@
         /* 1. Base Font */
         body {
             font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3 {
+            font-family: "Georgia", serif;
         }
 
         /* 2. Custom class for images to add a subtle border */
@@ -27,5 +33,6 @@
 
         /* 3. Custom styles for a simple, clean modal background */
         .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
         }
