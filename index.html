@@ -174,6 +174,16 @@
                             </div>
                         </div>
 
+                        <!-- Part 0.5: Diagnostic (Pre-Assessment) -->
+                        <div id="scenario-diagnostic" class="scenario-part hidden">
+                            <h3 class="text-2xl font-semibold mb-4 text-gray-800">Diagnostic Question</h3>
+                            <p id="diagnostic-question" class="text-lg mb-6"></p>
+                            <div id="diagnostic-options" class="flex flex-col gap-4">
+                                <!-- Options will be dynamically inserted here -->
+                            </div>
+                            <div id="diagnostic-feedback" class="text-red-600 mb-4 hidden italic font-medium"></div>
+                        </div>
+
                         <!-- Part 1: Introduction (Dynamic) -->
                         <div id="scenario-intro" class="scenario-part hidden">
                             <h3 class="text-2xl font-semibold mb-4 text-gray-800">Introduction: <span id="intro-title"></span></h3>
@@ -279,15 +289,11 @@
     <!-- JAVASCRIPT LOGIC (With Bug Fix)                        -->
     <!-- ====================================================== -->
     <script>
-        // ======================================================
-        // 16. SCENARIO DATA (The "Academic" Content)
-        // ======================================================
         const scenarioData = {
             'laura': {
                 title: "Laura's Day: The Pharmacy",
                 bio: {
                     name: "Laura (87)",
-                    // SVG Icon data
                     svg: {
                         bg: "url(#grad-laura)",
                         icon: `<rect width="24" height="24" rx="8" fill="#bfdbfe"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="7" r="4" stroke="#1e3a8a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`
@@ -300,12 +306,19 @@
                         "Lately, she's been frustrated by small memory lapses."
                     ]
                 },
+                diagnostic: {
+                    question: "Myth or Fact: Most elderly people will eventually develop dementia.",
+                    options: [
+                        { text: "Myth", correct: true },
+                        { text: "Fact", correct: false }
+                    ],
+                    feedback: "This is a common misconception. While the risk of dementia increases with age, it is not a normal part of aging. Most older adults do not develop dementia.",
+                },
                 intro: {
                     title: "Scene One: A Simple Errand",
                     text: "You are Laura. You've just had a lovely lunch with friends and stop by the pharmacy on your way home. You're feeling good, but also a little tired from all the talking."
                 },
                 scene: {
-                    // SVG char definitions
                     char1: { id: "char-1", alt: "Laura (87)", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#bfdbfe" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#bfdbfe" fill-opacity="0.8"/>` },
                     char2: { id: "char-2", alt: "Pharmacist", svg: `<path d="M50 40C39 40 30 49 30 60V70H70V60C70 49 61 40 50 40Z" fill="#fed7aa" fill-opacity="0.6"/><path d="M20 150V130C20 113.4 33.4 100 50 100C66.6 100 80 113.4 80 130V150H20Z" fill="#fed7aa" fill-opacity="0.8"/>` }
                 },
@@ -347,6 +360,14 @@
                         "She loves her family and treasures their weekly video calls.",
                         "Her son just sent her a new tablet, but she finds it 'fussy'."
                     ]
+                },
+                diagnostic: {
+                    question: "Myth or Fact: If your parents had a chronic disease (like heart disease), you are destined to have it too.",
+                    options: [
+                        { text: "Myth", correct: true },
+                        { text: "Fact", correct: false }
+                    ],
+                    feedback: "This is a common misconception. While genetics play a role, lifestyle factors like diet, exercise, and not smoking can significantly reduce your risk of developing many chronic diseases.",
                 },
                 intro: {
                     title: "Scene One: The Video Call",
@@ -396,6 +417,14 @@
                         "He refuses to get hearing aids, saying 'I'm not that old yet.'"
                     ]
                 },
+                diagnostic: {
+                    question: "Myth or Fact: You can't teach an old dog new tricks. (Older people can't learn new things).",
+                    options: [
+                        { text: "Myth", correct: true },
+                        { text: "Fact", correct: false }
+                    ],
+                    feedback: "This is a common misconception. Lifelong learning is beneficial for cognitive health. While the speed of learning might change, the ability to learn and adapt persists throughout life.",
+                },
                 intro: {
                     title: "Scene One: The Restaurant",
                     text: "You are Michel. Your family is taking you to your favorite (but very loud) Italian restaurant for your 82nd birthday. You're at a big, round table with your children and grandchildren."
@@ -433,14 +462,13 @@
         };
 
         // ======================================================
-        // 17. SIMULATION ENGINE
+        // SIMULATION ENGINE
         // ======================================================
 
-        // --- Global Variables ---
+        // --- Global State ---
         let currentScenario = null;
         let dialogueLines = [];
         let currentDialogueIndex = 0;
-        
         let char1 = null;
         let char2 = null;
     
@@ -459,20 +487,15 @@
             document.getElementById('screen-1-splash').classList.add('hidden');
             document.getElementById('screen-2-simulation').classList.add('hidden');
             
-            // Un-hide the requested screen
             const screen = document.getElementById(screenId);
             screen.classList.remove('hidden');
             
-            // Special case for splash screen: ensure it's flex
             if (screenId === 'screen-1-splash') {
                  screen.classList.add('flex');
-            }
-
-            // NEW: Hide character visuals when exiting
-            if (screenId === 'screen-1-splash') {
-                document.getElementById('character-visuals').classList.add('hidden');
-                if(char1) char1.classList.remove('active');
-                if(char2) char2.classList.remove('active');
+                 // Reset UI elements when going home
+                 document.getElementById('character-visuals').classList.add('hidden');
+                 if (char1) char1.classList.remove('active');
+                 if (char2) char2.classList.remove('active');
             }
         }
 
@@ -488,41 +511,24 @@
         
         // --- Active Speaker Highlight ---
         function setActiveSpeaker(speaker) {
-            if (!char1) char1 = document.getElementById('char-1');
-            if (!char2) char2 = document.getElementById('char-2');
-            
-            // Get the first name from the alt tag
+            if (!char1 || !char2) return;
             const char1Name = char1.alt.split(' ')[0];
             const char2Name = (char2.alt || "Other").split(' ')[0];
 
-            if (speaker === char1Name) {
-                char1.classList.add('active');
-                char2.classList.remove('active');
-            } else if (speaker === char2Name) {
-                char1.classList.remove('active');
-                char2.classList.add('active');
-            } else {
-                // Narrator or system
-                char1.classList.remove('active');
-                char2.classList.remove('active');
-            }
+            char1.classList.toggle('active', speaker === char1Name);
+            char2.classList.toggle('active', speaker === char2Name);
         }
 
-        // --- 18. MAIN: Start Simulation ---
+        // --- MAIN: Start Simulation ---
         function startSimulation(scenarioId) {
             currentScenario = scenarioData[scenarioId];
             
             // 1. Setup UI
             showScreen('screen-2-simulation');
             document.getElementById('scenario-title').textContent = currentScenario.title;
-            
-            // NEW: Set SVG Background
             document.getElementById('stage-bg-rect').setAttribute('fill', currentScenario.bio.svg.bg);
-            
-            // Show character visuals panel
             document.getElementById('character-visuals').classList.remove('hidden');
             
-            // NEW: Set SVG Characters
             char1 = document.getElementById('char-1');
             char2 = document.getElementById('char-2');
             char1.innerHTML = currentScenario.scene.char1.svg;
@@ -532,12 +538,11 @@
 
             // 2. Load Bio
             document.getElementById('bio-name').textContent = currentScenario.bio.name;
-            // NEW: Set SVG Bio Icon
             document.getElementById('bio-img-svg').innerHTML = currentScenario.bio.svg.icon;
             document.getElementById('bio-intro').textContent = currentScenario.bio.intro;
             
             const bulletsUl = document.getElementById('bio-bullets');
-            bulletsUl.innerHTML = ''; // Clear old bullets
+            bulletsUl.innerHTML = '';
             currentScenario.bio.bullets.forEach(bullet => {
                 const li = document.createElement('li');
                 li.textContent = bullet;
@@ -546,24 +551,67 @@
             
             showScenarioPart('scenario-bio');
             
-            // 3. Setup Continue Button
+            // 3. Setup Continue Button for Bio -> Diagnostic
             const continueButton = document.getElementById('continue-button');
             continueButton.textContent = 'Continue';
             continueButton.disabled = false;
+            continueButton.onclick = () => showDiagnostic();
+        }
+
+        // --- Show Diagnostic ---
+        function showDiagnostic() {
+            const diagnostic = currentScenario.diagnostic;
+            document.getElementById('diagnostic-question').textContent = diagnostic.question;
+
+            const optionsDiv = document.getElementById('diagnostic-options');
+            optionsDiv.innerHTML = '';
+
+            diagnostic.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = "text-left bg-gray-100 text-gray-700 p-4 rounded-lg hover:bg-gray-200 transition-all text-md font-medium";
+                button.textContent = option.text;
+                button.onclick = () => checkDiagnostic(option.correct);
+                optionsDiv.appendChild(button);
+            });
             
-            // 4. Set flow: Bio -> Intro -> Dialogue
-            continueButton.onclick = () => {
-                // Load Intro
+            document.getElementById('diagnostic-feedback').classList.add('hidden');
+            document.getElementById('continue-button').disabled = true;
+            showScenarioPart('scenario-diagnostic');
+        }
+
+        // --- Check Diagnostic ---
+        function checkDiagnostic(isCorrect) {
+            const diagnostic = currentScenario.diagnostic;
+            const feedbackEl = document.getElementById('diagnostic-feedback');
+            const continueButton = document.getElementById('continue-button');
+
+            if (isCorrect) {
+                // Correct answer, proceed to Intro
                 document.getElementById('intro-title').textContent = currentScenario.intro.title;
                 document.getElementById('intro-text').textContent = currentScenario.intro.text;
                 showScenarioPart('scenario-intro');
                 
-                // Set button for next step
+                continueButton.disabled = false;
                 continueButton.onclick = () => runDialogue();
-            };
+
+            } else {
+                // Incorrect answer, show feedback and allow advance
+                feedbackEl.textContent = diagnostic.feedback;
+                feedbackEl.classList.remove('hidden');
+
+                continueButton.disabled = false;
+                continueButton.textContent = 'Continue to Introduction';
+                continueButton.onclick = () => {
+                    document.getElementById('intro-title').textContent = currentScenario.intro.title;
+                    document.getElementById('intro-text').textContent = currentScenario.intro.text;
+                    showScenarioPart('scenario-intro');
+                    continueButton.textContent = 'Continue'; // Reset button text
+                    continueButton.onclick = () => runDialogue();
+                };
+            }
         }
 
-        // --- 19. Run Dialogue ---
+        // --- Run Dialogue ---
         function runDialogue() {
             showScenarioPart('scenario-dialogue');
             
@@ -576,7 +624,7 @@
             continueButton.disabled = false;
         }
         
-        // --- 20. Advance Dialogue ---
+        // --- Advance Dialogue ---
         function advanceDialogue() {
             currentDialogueIndex++;
             if (currentDialogueIndex < dialogueLines.length) {
@@ -586,24 +634,23 @@
             }
         }
         
-        // --- 21. Update Dialogue UI Helper ---
+        // --- Update Dialogue UI Helper ---
         function updateDialogueLine() {
             const line = dialogueLines[currentDialogueIndex];
             document.getElementById('dialogue-text').textContent = line.text;
-            // BUG FIX: Removed stray period from 'speaker-name'
             document.getElementById('speaker-name').textContent = line.speaker;
-            setActiveSpeaker(line.speaker.split(' ')[0]); // Pass first name
+            setActiveSpeaker(line.speaker.split(' ')[0]);
         }
         
-        // --- 22. Show Assessment ---
+        // --- Show Assessment ---
         function showAssessment() {
             const assessment = currentScenario.assessment;
             document.getElementById('assessment-question').textContent = assessment.question;
             
             const optionsDiv = document.getElementById('assessment-options');
-            optionsDiv.innerHTML = ''; // Clear old options
+            optionsDiv.innerHTML = '';
             
-            assessment.options.forEach((option, index) => {
+            assessment.options.forEach(option => {
                 const button = document.createElement('button');
                 button.className = "text-left bg-gray-100 text-gray-700 p-4 rounded-lg hover:bg-gray-200 transition-all text-md font-medium";
                 button.textContent = option.text;
@@ -616,7 +663,7 @@
             showScenarioPart('scenario-assessment');
         }
         
-        // --- 23. Check Assessment ---
+        // --- Check Assessment ---
         function checkAssessment(isCorrect) {
             const assessment = currentScenario.assessment;
             const feedbackEl = document.getElementById('assessment-feedback');
@@ -637,7 +684,7 @@
             }
         }
         
-        // --- 24. Show Reflection ---
+        // --- Show Reflection ---
         function showReflection() {
             document.getElementById('reflection-text').textContent = currentScenario.reflection;
             showScenarioPart('scenario-reflection');
@@ -647,7 +694,7 @@
             continueButton.onclick = () => showEndScreen();
         }
 
-        // --- 25. Show End Screen ---
+        // --- Show End Screen ---
         function showEndScreen() {
             showScenarioPart('scenario-end');
             document.getElementById('continue-button').disabled = true;
